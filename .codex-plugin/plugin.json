@@ -1,0 +1,26 @@
+{
+    "schema_version": "v1",
+    "name": "quality-of-quantity-protocol",
+    "display_name": "Minimum Business Doc Protocol",
+    "version": "0.1.0",
+    "description": "A coding agent skill that forces explicit business-logic explanation and synchronized documentation updates.",
+    "author": {
+        "name": "your-name-or-org"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Tazkus/qoq"
+    },
+    "entrypoints": {
+        "codex": {
+            "install": ".codex/INSTALL.md"
+        }
+    },
+    "skills": [
+        {
+            "name": "quality-of-quantity-protocol",
+            "path": "SKILL.md",
+            "description": "Use for behavior-affecting code changes that require business-logic and documentation synchronization."
+        }
+    ]
+}
