@@ -1,9 +1,9 @@
 {
     "schema_version": "v1",
     "name": "quality-of-quantity-protocol",
-    "display_name": "Minimum Business Doc Protocol",
+    "display_name": "Backend Business Doc Protocol",
     "version": "0.1.0",
-    "description": "A coding agent skill that forces explicit business-logic explanation and synchronized documentation updates.",
+    "description": "A coding agent skill that preserves backend project understandability by requiring explicit business-logic explanations and in-repository HTML summaries.",
     "author": {
         "name": "your-name-or-org"
     },
@@ -20,7 +20,7 @@
         {
             "name": "quality-of-quantity-protocol",
             "path": "SKILL.md",
-            "description": "Use for behavior-affecting code changes that require business-logic and documentation synchronization."
+            "description": "Use for backend behavior changes that require business-logic explanation and synchronized HTML documentation. Do not proactively use for frontend-only UI work."
         }
     ]
 }

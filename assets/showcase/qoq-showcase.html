@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>QoQ Backend Business Logic HTML Showcase</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f8fb;
+      --paper: #ffffff;
+      --ink: #1f2937;
+      --muted: #667085;
+      --line: #d6dae3;
+      --accent: #0f766e;
+      --warn: #b45309;
+      --danger: #b42318;
+      --ok: #067647;
+      --code: #f1f5f9;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    main {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 32px 0 56px;
+    }
+
+    header,
+    section {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      margin: 0 0 18px;
+      padding: 22px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0 0 12px;
+      line-height: 1.2;
+    }
+
+    h1 {
+      font-size: 28px;
+    }
+
+    h2 {
+      font-size: 20px;
+    }
+
+    h3 {
+      font-size: 16px;
+      color: var(--muted);
+    }
+
+    p {
+      margin: 0 0 12px;
+    }
+
+    .meta-grid,
+    .summary-grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      margin-top: 16px;
+    }
+
+    .fact {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 12px;
+      background: #fbfcfe;
+    }
+
+    .fact strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+
+    th,
+    td {
+      border: 1px solid var(--line);
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #eef2f7;
+      font-weight: 650;
+    }
+
+    ol,
+    ul {
+      margin: 10px 0 0 22px;
+      padding: 0;
+    }
+
+    li + li {
+      margin-top: 6px;
+    }
+
+    code {
+      background: var(--code);
+      border-radius: 4px;
+      padding: 1px 5px;
+    }
+
+    .diagram {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      margin-top: 14px;
+      overflow-x: auto;
+      background: #fbfcfe;
+    }
+
+    .diagram svg {
+      display: block;
+      min-width: 880px;
+      width: 100%;
+      height: auto;
+    }
+
+    .node {
+      fill: #ffffff;
+      stroke: #98a2b3;
+      stroke-width: 1.4;
+    }
+
+    .node-primary {
+      fill: #ecfdf3;
+      stroke: var(--ok);
+    }
+
+    .node-warn {
+      fill: #fffaeb;
+      stroke: var(--warn);
+    }
+
+    .node-danger {
+      fill: #fef3f2;
+      stroke: var(--danger);
+    }
+
+    .arrow {
+      stroke: #667085;
+      stroke-width: 1.5;
+      fill: none;
+      marker-end: url(#arrowhead);
+    }
+
+    .lane {
+      fill: #f8fafc;
+      stroke: #d0d5dd;
+    }
+
+    .label {
+      fill: var(--ink);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .small {
+      fill: var(--muted);
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .tag {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .tag-ok {
+      background: #dcfae6;
+      color: var(--ok);
+    }
+
+    .tag-warn {
+      background: #fef0c7;
+      color: var(--warn);
+    }
+
+    .tag-danger {
+      background: #fee4e2;
+      color: var(--danger);
+    }
+
+    .note {
+      color: var(--muted);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>QoQ Backend Business Logic HTML Showcase</h1>
+      <p>
+        This example documents a fictional enterprise order fulfillment and revenue settlement backend flow.
+        It demonstrates how an HTML summary can combine short prose, ordered steps, tables, and inline SVG diagrams.
+      </p>
+      <div class="meta-grid">
+        <div class="fact">
+          <strong>Default file</strong>
+          <span><code>docs/qoq.html</code> in a real project</span>
+        </div>
+        <div class="fact">
+          <strong>Example scope</strong>
+          <span>Backend API, inventory, payment, settlement, notification, and audit jobs</span>
+        </div>
+        <div class="fact">
+          <strong>Visual rule</strong>
+          <span>Diagrams clarify structure; tables hold exact branch and data rules</span>
+        </div>
+      </div>
+    </header>
+
+    <section id="minimal-summary">
+      <h2>Minimal Summary</h2>
+      <p>
+        When an enterprise buyer submits a multi-line order, the backend validates account eligibility, reserves inventory
+        per order line, charges the buyer once for the accepted subset, creates supplier payouts per accepted supplier,
+        emits fulfillment tasks, and records every skipped or failed line for audit and customer support review.
+      </p>
+      <div class="summary-grid">
+        <div class="fact">
+          <strong>Trigger</strong>
+          <span><code>POST /enterprise/orders</code> with one buyer and one or more order lines</span>
+        </div>
+        <div class="fact">
+          <strong>Result</strong>
+          <span>One order aggregate, zero or more fulfillment tasks, zero or more supplier settlement records</span>
+        </div>
+        <div class="fact">
+          <strong>Default path</strong>
+          <span>Validate, reserve, charge accepted lines, settle suppliers, dispatch fulfillment</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="workflow">
+      <h2>Backend Workflow Decomposition</h2>
+      <p class="note">Use an ordered list for the canonical countable steps, then add a flowchart when branches or loops make the shape hard to scan.</p>
+      <ol>
+        <li>Receive and normalize the order request.</li>
+        <li>Validate buyer account, contract terms, and credit limit.</li>
+        <li>Evaluate every order line for catalog status, supplier availability, inventory, and compliance restrictions.</li>
+        <li>Reserve inventory for accepted lines and mark rejected lines with explicit reasons.</li>
+        <li>Calculate buyer charge once from accepted lines plus fees and discounts.</li>
+        <li>Authorize payment for the aggregate accepted amount.</li>
+        <li>Create supplier settlement records grouped by supplier.</li>
+        <li>Create fulfillment tasks for accepted lines and audit records for every rejected or failed line.</li>
+      </ol>
+
+      <div class="diagram" role="img" aria-label="Flowchart of enterprise order processing">
+        <svg viewBox="0 0 1120 420" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+              <polygon points="0 0, 10 3.5, 0 7" fill="#667085"></polygon>
+            </marker>
+          </defs>
+
+          <rect x="30" y="52" width="150" height="58" rx="8" class="node-primary"></rect>
+          <text x="105" y="78" text-anchor="middle" class="label">1. Receive</text>
+          <text x="105" y="96" text-anchor="middle" class="small">POST order</text>
+
+          <rect x="225" y="52" width="150" height="58" rx="8" class="node-primary"></rect>
+          <text x="300" y="78" text-anchor="middle" class="label">2. Validate</text>
+          <text x="300" y="96" text-anchor="middle" class="small">account + credit</text>
+
+          <rect x="420" y="52" width="170" height="58" rx="8" class="node-primary"></rect>
+          <text x="505" y="78" text-anchor="middle" class="label">3. Evaluate Lines</text>
+          <text x="505" y="96" text-anchor="middle" class="small">per item rules</text>
+
+          <rect x="645" y="52" width="150" height="58" rx="8" class="node-primary"></rect>
+          <text x="720" y="78" text-anchor="middle" class="label">4. Reserve</text>
+          <text x="720" y="96" text-anchor="middle" class="small">accepted subset</text>
+
+          <rect x="840" y="52" width="150" height="58" rx="8" class="node-primary"></rect>
+          <text x="915" y="78" text-anchor="middle" class="label">5. Price</text>
+          <text x="915" y="96" text-anchor="middle" class="small">aggregate charge</text>
+
+          <rect x="840" y="190" width="150" height="58" rx="8" class="node-primary"></rect>
+          <text x="915" y="216" text-anchor="middle" class="label">6. Authorize</text>
+          <text x="915" y="234" text-anchor="middle" class="small">single payment</text>
+
+          <rect x="645" y="190" width="150" height="58" rx="8" class="node-primary"></rect>
+          <text x="720" y="216" text-anchor="middle" class="label">7. Settle</text>
+          <text x="720" y="234" text-anchor="middle" class="small">per supplier</text>
+
+          <rect x="420" y="190" width="170" height="58" rx="8" class="node-primary"></rect>
+          <text x="505" y="216" text-anchor="middle" class="label">8. Fulfillment</text>
+          <text x="505" y="234" text-anchor="middle" class="small">per accepted line</text>
+
+          <rect x="420" y="320" width="170" height="58" rx="8" class="node-warn"></rect>
+          <text x="505" y="346" text-anchor="middle" class="label">Audit Skips</text>
+          <text x="505" y="364" text-anchor="middle" class="small">all rejected lines</text>
+
+          <rect x="225" y="320" width="150" height="58" rx="8" class="node-danger"></rect>
+          <text x="300" y="346" text-anchor="middle" class="label">Reject Order</text>
+          <text x="300" y="364" text-anchor="middle" class="small">no accepted lines</text>
+
+          <path d="M180 81 H225" class="arrow"></path>
+          <path d="M375 81 H420" class="arrow"></path>
+          <path d="M590 81 H645" class="arrow"></path>
+          <path d="M795 81 H840" class="arrow"></path>
+          <path d="M915 110 V190" class="arrow"></path>
+          <path d="M840 219 H795" class="arrow"></path>
+          <path d="M645 219 H590" class="arrow"></path>
+          <path d="M505 110 V320" class="arrow"></path>
+          <path d="M420 349 H375" class="arrow"></path>
+        </svg>
+      </div>
+    </section>
+
+    <section id="branches">
+      <h2>Branching and Exception Paths</h2>
+      <p class="note">Use a table when each branch needs an exact condition, behavior, result, and return rule.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Branch</th>
+            <th>Condition</th>
+            <th>Behavior</th>
+            <th>Result</th>
+            <th>Control flow</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tag tag-ok">Default</span> accepted order</td>
+            <td>Buyer is eligible and at least one line passes all checks.</td>
+            <td>Reserve accepted lines, charge accepted total, create settlements and fulfillment tasks.</td>
+            <td>Order status becomes <code>PARTIALLY_ACCEPTED</code> or <code>ACCEPTED</code>.</td>
+            <td>Continues through settlement and fulfillment.</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-danger">Early termination</span> buyer invalid</td>
+            <td>Account suspended, contract expired, or credit limit unavailable.</td>
+            <td>No line evaluation, no inventory reservation, no payment authorization.</td>
+            <td>Order status becomes <code>REJECTED</code>.</td>
+            <td>Terminates before inventory checks.</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-warn">Partial acceptance</span> line rejected</td>
+            <td>Some lines fail catalog, inventory, supplier, or compliance checks.</td>
+            <td>Rejected lines are excluded from payment and fulfillment but written to audit output.</td>
+            <td>Accepted lines continue; rejected lines are visible to support.</td>
+            <td>Returns to main path with accepted subset.</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-warn">Retryable</span> payment timeout</td>
+            <td>Payment provider returns timeout before authorization state is known.</td>
+            <td>Hold reservations, schedule reconciliation job, do not dispatch fulfillment yet.</td>
+            <td>Order status becomes <code>PAYMENT_PENDING_REVIEW</code>.</td>
+            <td>Pauses main path until reconciliation resolves.</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-danger">Compensation</span> payment declined</td>
+            <td>Payment provider returns a definitive decline.</td>
+            <td>Release all reservations and cancel supplier settlement drafts.</td>
+            <td>Order status becomes <code>PAYMENT_FAILED</code>.</td>
+            <td>Terminates after compensation.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="topology">
+      <h2>Upstream and Downstream Topology</h2>
+      <p class="note">Use a topology diagram when the same backend module has multiple callers or multiple downstream targets.</p>
+      <div class="diagram" role="img" aria-label="Topology diagram for backend order orchestration">
+        <svg viewBox="0 0 1120 430" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrowhead-topology" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+              <polygon points="0 0, 10 3.5, 0 7" fill="#667085"></polygon>
+            </marker>
+          </defs>
+          <style>
+            .topology-arrow { stroke: #667085; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead-topology); }
+          </style>
+
+          <rect x="30" y="55" width="190" height="74" rx="8" class="node"></rect>
+          <text x="125" y="85" text-anchor="middle" class="label">Buyer Portal</text>
+          <text x="125" y="105" text-anchor="middle" class="small">interactive API caller</text>
+
+          <rect x="30" y="180" width="190" height="74" rx="8" class="node"></rect>
+          <text x="125" y="210" text-anchor="middle" class="label">Bulk Import Job</text>
+          <text x="125" y="230" text-anchor="middle" class="small">scheduled CSV ingestion</text>
+
+          <rect x="30" y="305" width="190" height="74" rx="8" class="node"></rect>
+          <text x="125" y="335" text-anchor="middle" class="label">Partner API</text>
+          <text x="125" y="355" text-anchor="middle" class="small">machine-to-machine caller</text>
+
+          <rect x="385" y="165" width="230" height="100" rx="8" class="node-primary"></rect>
+          <text x="500" y="200" text-anchor="middle" class="label">Order Orchestrator</text>
+          <text x="500" y="220" text-anchor="middle" class="small">normalizes entry context</text>
+          <text x="500" y="240" text-anchor="middle" class="small">routes downstream actions</text>
+
+          <rect x="780" y="40" width="240" height="62" rx="8" class="node"></rect>
+          <text x="900" y="68" text-anchor="middle" class="label">Inventory Service</text>
+          <text x="900" y="86" text-anchor="middle" class="small">reservation and release</text>
+
+          <rect x="780" y="135" width="240" height="62" rx="8" class="node"></rect>
+          <text x="900" y="163" text-anchor="middle" class="label">Payment Gateway</text>
+          <text x="900" y="181" text-anchor="middle" class="small">authorization and reconciliation</text>
+
+          <rect x="780" y="230" width="240" height="62" rx="8" class="node"></rect>
+          <text x="900" y="258" text-anchor="middle" class="label">Settlement Ledger</text>
+          <text x="900" y="276" text-anchor="middle" class="small">supplier payout records</text>
+
+          <rect x="780" y="325" width="240" height="62" rx="8" class="node"></rect>
+          <text x="900" y="353" text-anchor="middle" class="label">Fulfillment Queue</text>
+          <text x="900" y="371" text-anchor="middle" class="small">warehouse tasks</text>
+
+          <path d="M220 92 C285 92, 305 165, 385 195" class="topology-arrow"></path>
+          <path d="M220 217 H385" class="topology-arrow"></path>
+          <path d="M220 342 C285 342, 305 265, 385 235" class="topology-arrow"></path>
+          <path d="M615 188 C690 155, 705 72, 780 72" class="topology-arrow"></path>
+          <path d="M615 205 C690 195, 705 166, 780 166" class="topology-arrow"></path>
+          <path d="M615 225 C690 235, 705 261, 780 261" class="topology-arrow"></path>
+          <path d="M615 245 C690 275, 705 356, 780 356" class="topology-arrow"></path>
+        </svg>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Module</th>
+            <th>Entry points</th>
+            <th>Downstream targets</th>
+            <th>Context-sensitive behavior</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Order Orchestrator</td>
+            <td>Buyer Portal, Bulk Import Job, Partner API</td>
+            <td>Inventory, Payment, Settlement, Fulfillment, Audit</td>
+            <td>Bulk import allows row-level rejection; buyer portal returns immediate line-level feedback.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="data-handling">
+      <h2>Data and Collection Handling</h2>
+      <p class="note">Use a matrix for multiplicity. It is easier to audit than prose when item-level and aggregate-level rules both exist.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Dimension</th>
+            <th>Rule</th>
+            <th>Failure behavior</th>
+            <th>Finalization impact</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Input shape</td>
+            <td>One buyer, one order header, one or more order lines.</td>
+            <td>Empty line list rejects the whole order.</td>
+            <td>No reservation, charge, or settlement occurs.</td>
+          </tr>
+          <tr>
+            <td>Iteration</td>
+            <td>Line validation and inventory reservation run per line; payment runs once after aggregation.</td>
+            <td>A failed line does not block other lines unless no accepted lines remain.</td>
+            <td>Accepted subset continues to aggregate charge.</td>
+          </tr>
+          <tr>
+            <td>Filtering</td>
+            <td>Inactive SKU, blocked supplier, restricted region, or insufficient inventory excludes a line.</td>
+            <td>Excluded lines are reported with reason codes and written to audit records.</td>
+            <td>Excluded lines are never charged or fulfilled.</td>
+          </tr>
+          <tr>
+            <td>Mapping</td>
+            <td>Each accepted line maps to one fulfillment task and one supplier settlement allocation.</td>
+            <td>Mapping failure for one accepted line marks that line as failed and releases its reservation.</td>
+            <td>Remaining accepted lines may still finalize.</td>
+          </tr>
+          <tr>
+            <td>Aggregation</td>
+            <td>Buyer charge aggregates accepted line totals, shipping fee, service fee, and contract discount.</td>
+            <td>Invalid aggregate pricing blocks payment authorization.</td>
+            <td>No fulfillment dispatch until aggregate payment is authorized.</td>
+          </tr>
+          <tr>
+            <td>Partial failure</td>
+            <td>Partial line failure is allowed before payment; payment decline fails the accepted subset as a group.</td>
+            <td>Reservations are released for group-level payment decline.</td>
+            <td>Order may end as rejected, partially accepted, pending review, or accepted.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="sequence">
+      <h2>Sequence Diagram Example</h2>
+      <p class="note">Use a sequence diagram when timing, confirmation order, or external side effects matter.</p>
+      <div class="diagram" role="img" aria-label="Sequence diagram of payment timeout handling">
+        <svg viewBox="0 0 1120 480" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrowhead-seq" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+              <polygon points="0 0, 10 3.5, 0 7" fill="#667085"></polygon>
+            </marker>
+          </defs>
+          <style>
+            .seq-arrow { stroke: #667085; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead-seq); }
+            .lifeline { stroke: #98a2b3; stroke-dasharray: 5 5; }
+          </style>
+
+          <rect x="55" y="30" width="150" height="44" rx="6" class="node"></rect>
+          <text x="130" y="57" text-anchor="middle" class="label">API</text>
+          <rect x="285" y="30" width="170" height="44" rx="6" class="node-primary"></rect>
+          <text x="370" y="57" text-anchor="middle" class="label">Orchestrator</text>
+          <rect x="555" y="30" width="170" height="44" rx="6" class="node"></rect>
+          <text x="640" y="57" text-anchor="middle" class="label">Payment</text>
+          <rect x="835" y="30" width="170" height="44" rx="6" class="node"></rect>
+          <text x="920" y="57" text-anchor="middle" class="label">Reconciler</text>
+
+          <line x1="130" y1="74" x2="130" y2="450" class="lifeline"></line>
+          <line x1="370" y1="74" x2="370" y2="450" class="lifeline"></line>
+          <line x1="640" y1="74" x2="640" y2="450" class="lifeline"></line>
+          <line x1="920" y1="74" x2="920" y2="450" class="lifeline"></line>
+
+          <path d="M130 120 H370" class="seq-arrow"></path>
+          <text x="250" y="112" text-anchor="middle" class="small">submit accepted subset</text>
+
+          <path d="M370 180 H640" class="seq-arrow"></path>
+          <text x="505" y="172" text-anchor="middle" class="small">authorize aggregate amount</text>
+
+          <path d="M640 240 H370" class="seq-arrow"></path>
+          <text x="505" y="232" text-anchor="middle" class="small">timeout, state unknown</text>
+
+          <path d="M370 300 H920" class="seq-arrow"></path>
+          <text x="645" y="292" text-anchor="middle" class="small">schedule reconciliation, hold reservations</text>
+
+          <path d="M920 360 H640" class="seq-arrow"></path>
+          <text x="780" y="352" text-anchor="middle" class="small">query provider state</text>
+
+          <path d="M920 420 H370" class="seq-arrow"></path>
+          <text x="645" y="412" text-anchor="middle" class="small">resume: authorize or compensate</text>
+        </svg>
+      </div>
+    </section>
+
+    <section id="verification">
+      <h2>Verification and Impact Scope</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Changed or reviewed area</th>
+            <th>Expected backend behavior</th>
+            <th>Verification example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Order API</td>
+            <td>Rejects invalid buyer before inventory reservation.</td>
+            <td>API test with suspended account expects <code>REJECTED</code> and no reservation calls.</td>
+          </tr>
+          <tr>
+            <td>Line filtering</td>
+            <td>Skips invalid lines while preserving accepted lines.</td>
+            <td>Fixture with 3 lines: 1 accepted, 2 rejected; payment amount includes only accepted line.</td>
+          </tr>
+          <tr>
+            <td>Payment timeout</td>
+            <td>Holds reservations and schedules reconciliation instead of dispatching fulfillment.</td>
+            <td>Provider timeout test expects <code>PAYMENT_PENDING_REVIEW</code> and one reconciliation job.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="open-questions">
+      <h2>Open Questions</h2>
+      <ul>
+        <li>Should contract discounts be recomputed after partial line rejection, or should they be based on the original requested order?</li>
+        <li>Which support queue owns buyer notification when payment reconciliation resolves after more than 24 hours?</li>
+        <li>Can supplier settlement records be created before payment capture, or only after capture confirmation?</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>
