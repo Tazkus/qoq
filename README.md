@@ -7,8 +7,9 @@ A coding agent skill that preserves backend project understandability after busi
 When a backend code change may affect business behavior, this skill requires the agent to:
 
 1. explain the latest business logic in concrete terms;
-2. update an in-repository HTML summary so code and docs stay aligned;
-3. explicitly document workflow steps, branching, module topology, collection handling, verification, and open questions.
+2. keep the main agent responsible for the core business-logic structure;
+3. use a documentation subagent, when available, to review and format the in-repository HTML summary;
+4. explicitly document workflow steps, branching, module topology, collection handling, verification, and open questions.
 
 The default documentation target is `docs/qoq.html`. If a project already has a more specific backend business HTML document, the skill prefers updating that existing document.
 

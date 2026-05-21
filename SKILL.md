@@ -1,6 +1,6 @@
 ---
 name: quality-of-quantity-protocol
-description: Use for backend code changes that may alter business logic, workflow shape, branching behavior, upstream/downstream relationships, or handling of multiple items. After each meaningful backend change, explain the latest business logic to the user and update an in-repository HTML summary, defaulting to docs/qoq.html. Do not proactively use for frontend-only UI, layout, styling, or component changes unless the user explicitly asks and the frontend code owns real business rules.
+description: Use for backend code changes that may alter business logic, workflow shape, branching behavior, upstream/downstream relationships, or handling of multiple items. After each meaningful backend change, the main agent must explain the core business logic and use a documentation subagent, when available, to review and format the in-repository HTML summary, defaulting to docs/qoq.html. Do not proactively use for frontend-only UI, layout, styling, or component changes unless the user explicitly asks and the frontend code owns real business rules.
 ---
 
 # Purpose
@@ -9,8 +9,9 @@ Maintain backend project understandability after meaningful business-logic chang
 
 For each applicable change, the agent must:
 
-1. explain the latest backend business logic to the user, and
-2. update an HTML summary document inside the project repository.
+1. explain the latest backend business logic to the user,
+2. output the core business logic structure before or alongside the documentation work, and
+3. update an HTML summary document inside the project repository.
 
 This skill exists to prevent drift between backend code, documentation, and human understanding.
 
@@ -168,6 +169,33 @@ Documentation target rules:
 - Otherwise create or update `docs/qoq.html`.
 - Do not use Markdown as the default summary format.
 - Do not leave the summary only in the final chat response.
+
+# Documentation subagent workflow
+
+Use a documentation subagent for every applicable backend change when subagents are available.
+
+Main agent responsibilities:
+
+- Own the source-of-truth analysis of the code change.
+- Produce the core backend business logic structure: minimal summary, workflow steps, branch conditions, topology, collection handling, verification scope, and open questions.
+- Give the documentation subagent the relevant changed files, existing HTML documentation target, and the core business logic structure.
+- Review the subagent output before finalizing and correct any mismatch with the code.
+- Explain the latest backend business logic to the user in the final response.
+
+Documentation subagent responsibilities:
+
+- Recheck the provided core business logic structure against the relevant files and documentation.
+- Identify missing workflow steps, branch conditions, topology relationships, collection rules, verification gaps, or unsupported assumptions.
+- Update or draft the HTML documentation using the required sections, table rules, and diagram rules.
+- Improve the HTML structure, readability, and maintainability without changing the business meaning.
+- Report the documentation file path changed, any uncertainty, and any corrections it made.
+
+Rules for using the documentation subagent:
+
+- Do not delegate code implementation to the documentation subagent.
+- Do not let the documentation subagent become the only source of business truth; the main agent remains accountable for accuracy.
+- Keep the subagent task bounded to HTML documentation review, formatting, structure, readability, and coverage checks.
+- If subagents are unavailable in the current environment, the main agent must perform the documentation work directly and state in the final response that the required subagent step could not be run.
 
 # HTML chart and table rules
 
@@ -370,6 +398,7 @@ Before finishing, tell the user:
    - how aggregation/finalization works
 6. which in-repository HTML documentation file was updated
 7. what was verified and what remains uncertain
+8. whether a documentation subagent handled HTML documentation review and formatting, or whether subagents were unavailable
 
 Required phrasing standard:
 
@@ -400,4 +429,6 @@ This skill is complete only if all of the following are true:
 - upstream/downstream relationships have been documented where applicable
 - multiplicity rules have been documented where applicable
 - verification and impact scope are recorded
+- if subagents are available, HTML documentation review and formatting were handled by a documentation subagent
+- if subagents are unavailable, the final response explicitly says so and the main agent completed the HTML documentation directly
 - no unsupported assumptions were added
